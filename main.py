@@ -41,8 +41,28 @@ def edge_contract_seq(vertices, edges):
     # set of super vertices
     new_vertices = set()
     for e in edges:
+			#look at both ends, if not selected (selected set)
+			#for v in vertices:
+      if e[0] not in selected_vertices and e[1] not in selected_vertices:
+        selected_vertices.add(e[0])
+        selected_vertices.add(e[1])
+        vertex_map[e[0]] = e[1]
+        vertex_map[e[1]] = e[1]
+        new_vertices.add(e[1])
+				#update?
         ### TODO: complete
-        pass
+        # if e not neighbors w/ previously 
+        # selected e:
+            # arbitrarily assign super vertex
+            # E[1]
+            
+      #add v to new vertice set
+      #find a supervertex for vertex_map v
+      #remaining set of vertices choose one in new vertices
+    for v in vertices - selected_vertices:
+      vertex_map[v] = v
+      new_vertices.add(v)
+
     return new_vertices, vertex_map
 
 
@@ -82,14 +102,33 @@ def edge_contract_seq_sizes(vertices, edges, sizes):
 
     Complete the implementation below.
     """
-    selected_vertices = set()
+    #selected_vertices = set()
+    #vertex_map = {}
+    #new_vertices = set()
+    #sizes = {}
+    selected_v = set()
     vertex_map = {}
     new_vertices = set()
     for e in edges:
-        ### TODO: complete
-        pass
+        if e[0] not in selected_v and e[1] not in selected_v:
+            selected_v.add(e[0])
+            selected_v.add(e[1])
+            vertex_map[e[0]] = e[1]
+            vertex_map[e[1]] = e[1]
+            sizes[e[1]] += sizes[e[0]]
+            # arbitrarily make e[1] the super vertex of e[0]
+            new_vertices.add(e[1])
+    for v in vertices - selected_v:
+        vertex_map[v] = v
+        new_vertices.add(v)
         
     return new_vertices, vertex_map, sizes
+          #sizes[v] = len(vertex_map[v])
+
+
+        #pass
+        
+    #return new_vertices, vertex_map, sizes
 
 
 def test_edge_contract_seq_sizes():
@@ -132,5 +171,6 @@ def test_component_sizes():
     sizes.update(vertices)
     # sizes is: {'a': 1, 'b': 1, ...}
     assert sorted(component_sizes(vertices, edges, edge_contract_seq_sizes, sizes)) == [3, 6]
+
 
 
